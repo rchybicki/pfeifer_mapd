@@ -4,18 +4,24 @@ $Go.package("main");
 $Go.import("offline");
 
 struct Way {
-  name @0 :Text;
-  ref @1 :Text;
-  maxSpeed @2 :Float64;
-  minLat @3 :Float64;
-  minLon @4 :Float64;
-  maxLat @5 :Float64;
-  maxLon @6 :Float64;
-  nodes @7 :List(Coordinates);
-  lanes @8 :UInt8;
-  advisorySpeed @9 :Float64;
-  hazard @10 :Text;
-  oneWay @11 :Bool;
+  id @0 :Int64;
+  name @1 :Text;
+  ref @2 :Text;
+  maxSpeed @3 :Float64;
+  minLat @4 :Float64;
+  minLon @5 :Float64;
+  maxLat @6 :Float64;
+  maxLon @7 :Float64;
+  nodes @8 :List(Coordinates);
+  lanes @9 :UInt8;
+  advisorySpeed @10 :Float64;
+  hazard @11 :Text;
+  oneWay @12 :Bool;
+  maxSpeedPractical @13 :Float64;
+  maxSpeedPracticalForward @14 :Float64;
+  maxSpeedPracticalBackward @15 :Float64;
+  maxSpeedForward @16 :Float64;
+  maxSpeedBackward @17 :Float64;
 }
 
 struct Coordinates {

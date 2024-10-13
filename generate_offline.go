@@ -20,18 +20,24 @@ type TmpNode struct {
 	Longitude float64
 }
 type TmpWay struct {
-	Name             string
-	Ref              string
-	Hazard           string
-	MaxSpeed         float64
+	Id                       int64  // Add this line
+	Name                     string
+	Ref                      string
+	Hazard                   string
+	MaxSpeed                 float64
 	MaxSpeedAdvisory float64
-	Lanes            uint8
-	MinLat           float64
-	MinLon           float64
-	MaxLat           float64
-	MaxLon           float64
-	OneWay           bool
-	Nodes            []TmpNode
+	MaxSpeedPractical        float64
+	MaxSpeedPracticalForward float64
+	MaxSpeedPracticalBackward float64
+	MaxSpeedForward          float64
+	MaxSpeedBackward         float64
+	Lanes                    uint8
+	MinLat                   float64
+	MinLon                   float64
+	MaxLat                   float64
+	MaxLon                   float64
+	OneWay                   bool
+	Nodes                    []TmpNode
 }
 
 type Area struct {
@@ -143,14 +149,20 @@ func GenerateOffline(minGenLat int, minGenLon int, maxGenLat int, maxGenLon int,
 			tags := way.TagMap()
 			lanes, _ := strconv.ParseUint(tags["lanes"], 10, 8)
 			tmpWay := TmpWay{
-				Nodes:            make([]TmpNode, len(way.Nodes)),
-				Name:             tags["name"],
-				Ref:              tags["ref"],
-				Hazard:           tags["hazard"],
-				MaxSpeed:         ParseMaxSpeed(tags["maxspeed"]),
+				Id:                       int64(way.ID),
+				Nodes:                    make([]TmpNode, len(way.Nodes)),
+				Name:                     tags["name"],
+				Ref:                      tags["ref"],
+				Hazard:                   tags["hazard"],
+				MaxSpeed:                 ParseMaxSpeed(tags["maxspeed"]),
 				MaxSpeedAdvisory: ParseMaxSpeed(tags["maxspeed:advisory"]),
-				Lanes:            uint8(lanes),
-				OneWay:           tags["oneway"] == "yes",
+				MaxSpeedPractical:        ParseMaxSpeed(tags["maxspeed:practical"]),
+				MaxSpeedPracticalForward: ParseMaxSpeed(tags["maxspeed:practical:forward"]),
+				MaxSpeedPracticalBackward: ParseMaxSpeed(tags["maxspeed:practical:backward"]),
+				MaxSpeedForward:          ParseMaxSpeed(tags["maxspeed:forward"]),
+				MaxSpeedBackward:         ParseMaxSpeed(tags["maxspeed:backward"]),
+				Lanes:                    uint8(lanes),
+				OneWay:                   tags["oneway"] == "yes",
 			}
 			index++
 
@@ -228,6 +240,7 @@ func GenerateOffline(minGenLat int, minGenLon int, maxGenLat int, maxGenLon int,
 		rootOffline.SetOverlap(OVERLAP_BOX_DEGREES)
 		for i, way := range area.Ways {
 			w := ways.At(i)
+			w.SetId(way.Id)
 			w.SetMinLat(way.MinLat)
 			w.SetMinLon(way.MinLon)
 			w.SetMaxLat(way.MaxLat)
@@ -240,6 +253,11 @@ func GenerateOffline(minGenLat int, minGenLon int, maxGenLat int, maxGenLon int,
 			check(errors.Wrap(err, "could not set way hazard"))
 			w.SetMaxSpeed(way.MaxSpeed)
 			w.SetAdvisorySpeed(way.MaxSpeedAdvisory)
+			w.SetMaxSpeedPractical(way.MaxSpeedPractical)
+			w.SetMaxSpeedPracticalForward(way.MaxSpeedPracticalForward)
+			w.SetMaxSpeedPracticalBackward(way.MaxSpeedPracticalBackward)
+			w.SetMaxSpeedForward(way.MaxSpeedForward)
+			w.SetMaxSpeedBackward(way.MaxSpeedBackward)
 			w.SetLanes(way.Lanes)
 			w.SetOneWay(way.OneWay)
 			nodes, err := w.NewNodes(int32(len(way.Nodes)))

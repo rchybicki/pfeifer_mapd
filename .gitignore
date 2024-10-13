@@ -1,4 +1,4 @@
-mapd
+build/mapd
 **/*.DS_Store
 **/*._.DS_Store
 offline

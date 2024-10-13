@@ -15,12 +15,12 @@ type Way capnp.Struct
 const Way_TypeID = 0xa4b9c59286b69600
 
 func NewWay(s *capnp.Segment) (Way, error) {
-	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 56, PointerCount: 4})
+	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 104, PointerCount: 4})
 	return Way(st), err
 }
 
 func NewRootWay(s *capnp.Segment) (Way, error) {
-	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 56, PointerCount: 4})
+	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 104, PointerCount: 4})
 	return Way(st), err
 }
 
@@ -56,6 +56,14 @@ func (s Way) Message() *capnp.Message {
 func (s Way) Segment() *capnp.Segment {
 	return capnp.Struct(s).Segment()
 }
+func (s Way) Id() int64 {
+	return int64(capnp.Struct(s).Uint64(0))
+}
+
+func (s Way) SetId(v int64) {
+	capnp.Struct(s).SetUint64(0, uint64(v))
+}
+
 func (s Way) Name() (string, error) {
 	p, err := capnp.Struct(s).Ptr(0)
 	return p.Text(), err
@@ -93,43 +101,43 @@ func (s Way) SetRef(v string) error {
 }
 
 func (s Way) MaxSpeed() float64 {
-	return math.Float64frombits(capnp.Struct(s).Uint64(0))
-}
-
-func (s Way) SetMaxSpeed(v float64) {
-	capnp.Struct(s).SetUint64(0, math.Float64bits(v))
-}
-
-func (s Way) MinLat() float64 {
 	return math.Float64frombits(capnp.Struct(s).Uint64(8))
 }
 
-func (s Way) SetMinLat(v float64) {
+func (s Way) SetMaxSpeed(v float64) {
 	capnp.Struct(s).SetUint64(8, math.Float64bits(v))
 }
 
-func (s Way) MinLon() float64 {
+func (s Way) MinLat() float64 {
 	return math.Float64frombits(capnp.Struct(s).Uint64(16))
 }
 
-func (s Way) SetMinLon(v float64) {
+func (s Way) SetMinLat(v float64) {
 	capnp.Struct(s).SetUint64(16, math.Float64bits(v))
 }
 
-func (s Way) MaxLat() float64 {
+func (s Way) MinLon() float64 {
 	return math.Float64frombits(capnp.Struct(s).Uint64(24))
 }
 
-func (s Way) SetMaxLat(v float64) {
+func (s Way) SetMinLon(v float64) {
 	capnp.Struct(s).SetUint64(24, math.Float64bits(v))
 }
 
-func (s Way) MaxLon() float64 {
+func (s Way) MaxLat() float64 {
 	return math.Float64frombits(capnp.Struct(s).Uint64(32))
 }
 
-func (s Way) SetMaxLon(v float64) {
+func (s Way) SetMaxLat(v float64) {
 	capnp.Struct(s).SetUint64(32, math.Float64bits(v))
+}
+
+func (s Way) MaxLon() float64 {
+	return math.Float64frombits(capnp.Struct(s).Uint64(40))
+}
+
+func (s Way) SetMaxLon(v float64) {
+	capnp.Struct(s).SetUint64(40, math.Float64bits(v))
 }
 
 func (s Way) Nodes() (Coordinates_List, error) {
@@ -156,19 +164,19 @@ func (s Way) NewNodes(n int32) (Coordinates_List, error) {
 	return l, err
 }
 func (s Way) Lanes() uint8 {
-	return capnp.Struct(s).Uint8(40)
+	return capnp.Struct(s).Uint8(48)
 }
 
 func (s Way) SetLanes(v uint8) {
-	capnp.Struct(s).SetUint8(40, v)
+	capnp.Struct(s).SetUint8(48, v)
 }
 
 func (s Way) AdvisorySpeed() float64 {
-	return math.Float64frombits(capnp.Struct(s).Uint64(48))
+	return math.Float64frombits(capnp.Struct(s).Uint64(56))
 }
 
 func (s Way) SetAdvisorySpeed(v float64) {
-	capnp.Struct(s).SetUint64(48, math.Float64bits(v))
+	capnp.Struct(s).SetUint64(56, math.Float64bits(v))
 }
 
 func (s Way) Hazard() (string, error) {
@@ -190,11 +198,51 @@ func (s Way) SetHazard(v string) error {
 }
 
 func (s Way) OneWay() bool {
-	return capnp.Struct(s).Bit(328)
+	return capnp.Struct(s).Bit(392)
 }
 
 func (s Way) SetOneWay(v bool) {
-	capnp.Struct(s).SetBit(328, v)
+	capnp.Struct(s).SetBit(392, v)
+}
+
+func (s Way) MaxSpeedPractical() float64 {
+	return math.Float64frombits(capnp.Struct(s).Uint64(64))
+}
+
+func (s Way) SetMaxSpeedPractical(v float64) {
+	capnp.Struct(s).SetUint64(64, math.Float64bits(v))
+}
+
+func (s Way) MaxSpeedPracticalForward() float64 {
+	return math.Float64frombits(capnp.Struct(s).Uint64(72))
+}
+
+func (s Way) SetMaxSpeedPracticalForward(v float64) {
+	capnp.Struct(s).SetUint64(72, math.Float64bits(v))
+}
+
+func (s Way) MaxSpeedPracticalBackward() float64 {
+	return math.Float64frombits(capnp.Struct(s).Uint64(80))
+}
+
+func (s Way) SetMaxSpeedPracticalBackward(v float64) {
+	capnp.Struct(s).SetUint64(80, math.Float64bits(v))
+}
+
+func (s Way) MaxSpeedForward() float64 {
+	return math.Float64frombits(capnp.Struct(s).Uint64(88))
+}
+
+func (s Way) SetMaxSpeedForward(v float64) {
+	capnp.Struct(s).SetUint64(88, math.Float64bits(v))
+}
+
+func (s Way) MaxSpeedBackward() float64 {
+	return math.Float64frombits(capnp.Struct(s).Uint64(96))
+}
+
+func (s Way) SetMaxSpeedBackward(v float64) {
+	capnp.Struct(s).SetUint64(96, math.Float64bits(v))
 }
 
 // Way_List is a list of Way.
@@ -202,7 +250,7 @@ type Way_List = capnp.StructList[Way]
 
 // NewWay creates a new list of Way.
 func NewWay_List(s *capnp.Segment, sz int32) (Way_List, error) {
-	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 56, PointerCount: 4}, sz)
+	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 104, PointerCount: 4}, sz)
 	return capnp.StructList[Way](l), err
 }
 
@@ -421,46 +469,55 @@ func (f Offline_Future) Struct() (Offline, error) {
 	return Offline(p.Struct()), err
 }
 
-const schema_da3a0d9284ca402f = "x\xda\xa4\xd3OkTW\x18\x06\xf0\xe79\xe7\xceL" +
-	"\x92\xc9\x9f\x0e\xf7.\xbah\x19(\x14\x92\x94\xb6I\xd3" +
-	"\xd5\x10H\xda\xd2\x92\x86@szS&\x85\x84\xf6\xd0" +
-	"\xb9\xd3N\x99\xdc;\xccL\x92\x19\x09\xa8\x10EA\x17" +
-	"\x0e\"\x8a\x0a\x11\"*\xb8r!\xba\x10\\\xa8\x0b]" +
-	"\xe9\xd2\x95\x9f\xc1\x0f\xe0\x95\xf7\x86\xc9Lp\xe9\xee\x9e" +
-	"\xdfy\xe7\xbc\x87\xf7<3u\x95\xf3\xce\xf4H\xa4\xa0" +
-	"\xccg\xa9t\xfc\xf2\x97\xff\x87\x9f\x15\xbf\xea\xc0\x8cR" +
-	"\xc5\xdf\xce?\xdf\xed\x8c\x14^\xc3\xc9\x00\xee\xe7|\xe5" +
-	"NP\xbe\xbe\xe46\xf8\xee\xd2\xfd\xd3\x9d\xa7\x0f\xf7\xcd" +
-	"(3\xbd\xcaTRz\x96\x1d\xf7\x82\x94\xce\x9c\xe7-" +
-	"\x05\xc6oZ[\xd6\x7f\xfb\xd7\x0b97\xd5W\x9d\x1c" +
-	"\xf7\xa7s\xcf\xb5\xf2\xbb\x99u\xa7H|\x1dG\xe5r" +
-	"\xb5\x12\x06\xdf\xa8\x7fl-\xac\x15~\x8a\xa2z\xa9\x12" +
-	"\xdaf\xc0\xc62i\x06\xb4\x038\x04r\x13\x8b\x80\x19" +
-	"\xd74\xdf+\xe6H\x8f\x82\xd3\xbf\x03fJ\xd3\xcc*" +
-	"\xc6U\xdb\xac47K\x01\x00f\xa1\x98\x05\xe3j\x14" +
-	"\xfe+\x08\x06\x87\xd6m\xc9\x83\x96E\xcb\xb6\xb4\x9a\xea" +
-	"\xb6r\x7f\xe0$\xe0\xcfR\xd3_`\xaf\x9b\xfb3\xbf" +
-	"\x00\xfcy\xf1%*RyT\x80\xfb+\x17\x01\x7fA" +
-	"xE\xca5=j\xc05,\x00\xfe\x92\xf8\xaa\xb8\xa3" +
-	"<:\x80\xfbG\xe2\xcb\xe2k\xe2)\xed1%\xb3I" +
-	"|E\xfco\xf1\xb4\xe31\x0d\xb8\xeb\x89\xaf\x8a\x97\xc4" +
-	"3\xcaKfi\xf9\x1d\xe0\xaf\x89\xb7\xc4\x07\xc6=\x0e" +
-	"\x00\xeef\xe25\xf1\x1d\xf1\xc1\xb4\xc7A\xc0m\xb3\x0e" +
-	"\xf8-\xf1]\xf1!\xedq\x08pO&\xe7\xef\x88\x9f" +
-	"\xa1\xe2tv\x81\x1e\xb3\x80{*\xd98!\x1b\xe7\xa8" +
-	"8\x16\xda\x8d\x80\xc3P\x1c\x063\xf5\xa0\xdc\xfd\x8e7" +
-	"l\xcb\xaf\x05A\xa9o\xf2s\x1b\x95p\xc96\x8f," +
-	"\xa3\xb0\xb7\xb4\xad#\xbb\xb6\xd5\xb7\x9b\x0f\xa3R\xd0\xe0" +
-	"(\xb8\xac\xc9OzI\x05\x05\xf3U\x1b\x06\x0d\xa6\xa1" +
-	"\x98\x06c[\xda\xaa4\xa2z\x1b\xf9\xe4\x0e\x87g\xfe" +
-	"g\x8f\xd9z\xa9{\xc7\xb9(\x0c\x8a\xb6MB\x91\x1f" +
-	"\x86\xe0\xb7r>YK\x10>=\xcc\xdc\x95\x02`." +
-	"j\x9a\xbd\xbe\xcc]\x17\xbc\xaci\xf6\x15s\xea \x03" +
-	"\xb9\x1b\x82\xd74\xcdm\x09\x80N\x02\x90\xbb)\xb8\xa7" +
-	"i\xee*\xd2I\x1e?wg\x120\xfb\x9a\xe6\xb1\xbc" +
-	"\xbc\x93\xbc|\xee\xd1\x8f\x80y\xa0i\x9e\xa8\x8f\x1a\xdc" +
-	"\xd8\xb6m\xf7\xe6\xd6\xfd\xd7\x1eL\xedx\xb4\x15\xd4\xab" +
-	"\xb6\xd6\xad}\x1f\x00\x00\xff\xff\xcfV\xc0a"
+const schema_da3a0d9284ca402f = "x\xda\xa4\xd4Oh\x1cU\x1c\x07\xf0\xef\xf7\xf7f6" +
+	"\x9b\xec\x9fdxs\x10\xa9D\xa5BZ\xad&Z\xa1" +
+	"\x04\xa1\xb5J)E0/#\xc4\x9b>2\x13]\xdd" +
+	"\xcc\x84\xc9\x9al\xbc\x08\"\xa2\x82\x07\x17\x11\x05\x85\x0a" +
+	"\x11\x14<y\x10=\x08\x1e\xd4C=\xd9\xa3'\x0f\x1e" +
+	"\x14,Xi\xb1\x07u\xe57\xed&[s\xf46\xef" +
+	"\xf3\xfb\xbd?\xec{\xdf\xbd]N\x05\x0b\xadB \xee" +
+	"PX\x1b\xfep\xe6\xb9\xe6w+w\x0f\xe0\xda\x94\xe1" +
+	"}\xa7.\xbc2h-\xfe\x88`\x02\xb0\xb7\xf1\xa2=" +
+	"B\xfd\xba\x8b\xdb\xe0?\xef|\xfe\xea\xe0\xdb/w]" +
+	"\x9b\xad\xfd\xce\xb0j}\x9d\x03\xfb\x96\xb6>\xf0&\xff" +
+	"4\xe0\xf0\xa7\xfe\x96O\xfex\xea{]7\x1c\xeb\xae" +
+	"\x96\xbb\x14~f\xaf\x86\xda}9\\!\x8e\x0d\x8b\xb5" +
+	"\xb5n'\xcf\xee\x95U\xbf\x91o,>R\x14e\xda" +
+	"\xc9}/\xe3\xe6\x12\xe9\xea&\x00\x02\x02\xd1\x91s\x80" +
+	"\x9b3t\xc7\x85\x11\x19Sqa\x19p\xf3\x86\xee!" +
+	"\xe1\xb0\xeb{\x9d\xde\x0bi\x06\x80\x0d\x08\x1b\xe0\xb0[" +
+	"\xe4\xcf(\x82\xd9\x9e\x8d\xb6\xe4\xf5-W<wt\xab" +
+	"\xb3\xa3\xad\xec\xaf\xbc\x15H~\xa6a\xf2;\x8576" +
+	"\xb3\x97x\x14H~Q\xbeBa$\x8c)\x80\xbd\xcc" +
+	";\x81\xe47\xf5k\xea\x861\x0d`\xaf\xf2\x1c\x90\\" +
+	"\xa1\xe1\xb2\x08\xa3@b\x06\x80\xfd\x9b\x8b@rM\xdb" +
+	"\x03\xf5\xd0\xc4\x0c\x01KQ\xffK\xbd\xae^\x0bb\xd6" +
+	"\x00\x1b\xaa/\x8ba\xd2T\x9e\x08\xe3\xea\x97\x9c\xac\xda" +
+	"\x03\xf5\x19\xf5\xba\xc4\xac\x03\xb6%\xf7\x03I]\xfd\xb0" +
+	"\xfa\xe4|\xccI\xc0\xdeQ\xf9!\xf59\xf5\xa9\x89\x98" +
+	"Sz\xc1R\x02\xc9a\xf5y\xf5\x86\x89\xd9\x00\xec\xb1" +
+	"j\xfd9\xf5\xe3\"\\h\xbe\xc6\x98M\xc0.T\x85" +
+	"{\xb4pB'\xb4\xea1[\x80}P\x06@rB" +
+	"\xfdQ\xf5\xf6d\xcc6`\x1f\x96\x0b@rV\xfd\x09" +
+	"\xf5\xe9\xa9\x98\xd3\x80ur\x11H\x9eTO\xd5g\x1a" +
+	"1g\x00\xeb\xe5e yZ\xbd\xab\x1e5cF\x80" +
+	"\xed\xc8\x1b@\xd2U\xef\x8b\xd0tR\x86\x10\x86\xe0t" +
+	"\xee\xd736!l\x82\x13e\xb66\xfa\x1e\xae\xfb~" +
+	"\xb2\x91e\xe9\xd8\x938\xb9\xde\xc9\x1f\xf3\xbd\x9b\x86E" +
+	"\xbe?\xf4\xfd\x9b\xaa\xbe?V\x9d\xcd\x8b4\xdbd\x1b" +
+	"\\2\xe4\xcc~\x84@\xc5\xd9\xae\xcf\xb3M\xd6 \xac" +
+	"\x81C\x9fnu6\x8br\x07\xb3\xd5\x19\xf6\xd6|\xd6" +
+	"\xbf\xe8\xcbtt\xc6\x93E\x9e\xad\xf8\x1d\x12B\x8e\x1d" +
+	"\x99K\xa5_\xeduV=\xbb{/wT\x93Q\xad" +
+	"{\xa6(\xb7}\x99\x8e\xbd\xf8\x83=\xa7\xfd\xea\xf3\xdb" +
+	"\xbedz\xa0\x87\xa3\xe9\x07+7&\x8d\xaf\xfc\x9f\xdc" +
+	"<\xbe6[\x8d5;\xb7\xec\xc5\xf4\xbdE\xc0\xbdm" +
+	"\xe8\xce\x8f\xc5\xf4\x03\xc5w\x0d\xdd\xae\xc6F\xaa\xd8D" +
+	"\x1f*\xbeo\xe8>\xd6\xcc\x98*3\xd1G\x8a\xe7\x0d" +
+	"\xdd\xa7B\x06U`\xa2O\x8e\x02n\xd7\xd0}\xadi" +
+	"\x09\xaa\xb4D_\x9d\x06\xdc\x17\x86\xee\x1b\xf9_W:" +
+	"\xbd\xedw\xf6ot\xf4Gw\xfd>_*\xb6\xb2\xb2" +
+	"\xeb7F\xbd\xff\x06\x00\x00\xff\xff\xd4 \x002"
 
 func RegisterSchema(reg *schemas.Registry) {
 	reg.Register(&schemas.Schema{

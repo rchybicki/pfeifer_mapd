@@ -30,6 +30,7 @@ type NextSpeedLimit struct {
 	Latitude   float64 `json:"latitude"`
 	Longitude  float64 `json:"longitude"`
 	Speedlimit float64 `json:"speedlimit"`
+	WayId      uint64  `json:"way_id"`
 }
 
 type AdvisoryLimit struct {
@@ -174,7 +175,9 @@ func loop(state *State) {
 	err = PutParam(ROAD_NAME, []byte(RoadName(state.CurrentWay.Way)))
 	logwe(errors.Wrap(err, "could not write road name"))
 
-	data, err = json.Marshal(state.CurrentWay.Way.MaxSpeed())
+	// Update this section to consider direction for max speed
+	maxSpeed := getDirectionalMaxSpeed(state.CurrentWay.Way, state.CurrentWay.OnWay.IsForward)
+	data, err = json.Marshal(maxSpeed)
 	logde(errors.Wrap(err, "could not marshal speed limit"))
 	err = PutParam(MAP_SPEED_LIMIT, data)
 	logwe(errors.Wrap(err, "could not write speed limit"))
@@ -226,19 +229,23 @@ func loop(state *State) {
 	}
 
 	if len(state.NextWays) > 0 {
-		currentMaxSpeed := state.CurrentWay.Way.MaxSpeed()
+		currentMaxSpeed := getDirectionalMaxSpeed(state.CurrentWay.Way, state.CurrentWay.OnWay.IsForward)
 		nextMaxSpeed := currentMaxSpeed
 		nextSpeedWay := state.NextWays[0]
 		for _, nextWay := range state.NextWays {
+			// Change nextWay.OnWay to nextWay.IsForward
+			nextWayMaxSpeed := getDirectionalMaxSpeed(nextWay.Way, nextWay.IsForward)
 			if nextMaxSpeed == currentMaxSpeed {
 				nextSpeedWay = nextWay
-				nextMaxSpeed = nextWay.Way.MaxSpeed()
+				nextMaxSpeed = nextWayMaxSpeed
 			}
 		}
 		data, err = json.Marshal(NextSpeedLimit{
 			Latitude:   nextSpeedWay.StartPosition.Latitude(),
 			Longitude:  nextSpeedWay.StartPosition.Longitude(),
-			Speedlimit: nextSpeedWay.Way.MaxSpeed(),
+			Speedlimit: nextMaxSpeed,
+			// Change Way.Id() to Way.Id
+			WayId:      uint64(nextSpeedWay.Way.Id()), // Cast int64 to uint64
 		})
 		logde(errors.Wrap(err, "could not marshal next speed limit"))
 		err = PutParam(NEXT_MAP_SPEED_LIMIT, data)
@@ -331,4 +338,27 @@ func main() {
 	for {
 		loop(&state)
 	}
+}
+
+// Add this new function to determine the directional max speed
+func getDirectionalMaxSpeed(way Way, isForward bool) float64 {
+	if isForward {
+		if way.MaxSpeedPracticalForward() > 0 {
+			return way.MaxSpeedPracticalForward()
+		} else if way.MaxSpeedForward() > 0 {
+			return way.MaxSpeedForward()
+		}
+	} else {
+		if way.MaxSpeedPracticalBackward() > 0 {
+			return way.MaxSpeedPracticalBackward()
+		} else if way.MaxSpeedBackward() > 0 {
+			return way.MaxSpeedBackward()
+		}
+	}
+	
+	if way.MaxSpeedPractical() > 0 {
+		return way.MaxSpeedPractical()
+	}
+	
+	return way.MaxSpeed()
 }
