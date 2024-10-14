@@ -345,19 +345,19 @@ func getDirectionalMaxSpeed(way Way, isForward bool) float64 {
 	if isForward {
 		if way.MaxSpeedPracticalForward() > 0 {
 			return way.MaxSpeedPracticalForward()
-		} else if way.MaxSpeedPractical() > 0 {
-			return way.MaxSpeedPractical()
 		} else if way.MaxSpeedForward() > 0 {
 			return way.MaxSpeedForward()
 		}
 	} else {
 		if way.MaxSpeedPracticalBackward() > 0 {
 			return way.MaxSpeedPracticalBackward()
-		} else if way.MaxSpeedPractical() > 0 {
-			return way.MaxSpeedPractical()
 		} else if way.MaxSpeedBackward() > 0 {
 			return way.MaxSpeedBackward()
 		}
+	}
+	
+	if way.MaxSpeedPractical() > 0 {
+		return way.MaxSpeedPractical()
 	}
 	
 	return way.MaxSpeed()

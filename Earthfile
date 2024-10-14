@@ -12,8 +12,10 @@ build:
     FROM +deps
     COPY *.go .
     COPY *.json .
-    RUN CGO_ENABLED=0 go build -ldflags="-extldflags=-static -s -w" -o build/mapd
-    SAVE ARTIFACT build/mapd /mapd AS LOCAL build/mapd
+    RUN CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o build/mapd
+    RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="-extldflags=-static -s -w" -o build/mapd-comma
+    SAVE ARTIFACT build/mapd /mapd AS LOCAL scripts/mapd
+    SAVE ARTIFACT build/mapd-comma /mapd-comma AS LOCAL scripts/mapd-comma
 
 test-deps:
     FROM +deps
@@ -75,10 +77,17 @@ compile-capnp:
 build-release:
     BUILD --platform=linux/arm64 +build
 
+build-release-mac:
+    FROM +deps
+    COPY *.go .
+    COPY *.json .
+    RUN CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o build/mapd-darwin-arm64
+    SAVE ARTIFACT build/mapd-darwin-arm64 /mapd-darwin-arm64 AS LOCAL build/mapd-darwin-arm64
+
 docker:
     FROM ubuntu:latest
     WORKDIR /app
-    COPY +build/mapd .
+    COPY +build/mapd-comma ./mapd
     COPY scripts/*.sh .
     RUN apt update
     RUN apt install rclone wget osmium-tool -y
