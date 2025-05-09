@@ -58,3 +58,13 @@ comma device
 ```bash
 earthly +build
 ```
+
+
+### RCH NOTES:
+To update the OpenPilot binary, run:
+earthly +build
+cd scripts
+./upload_mapd_comma.sh
+
+To update maps:
+generate_and_update_Poland.sh
