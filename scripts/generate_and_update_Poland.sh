@@ -23,5 +23,3 @@ do
   done
 
 done
-
-./upload_mapd_comma.sh

@@ -790,9 +790,26 @@ func GenerateOffline(minGenLat int, minGenLon int, maxGenLat int, maxGenLon int,
 			}
 			index++
 
-			// Apply override if it exists, only for MaxSpeedPractical
+			// Apply override if it exists for all speed values
 			if override, exists := maxSpeedOverrides[tmpWay.Id]; exists {
-				tmpWay.MaxSpeedPractical = 0.277778 * override
+				overrideInMS := 0.277778 * override // Convert to m/s
+				tmpWay.MaxSpeedPractical = overrideInMS
+
+				// Apply override to directional practical speeds
+				if tmpWay.MaxSpeedPracticalForward > 0 {
+					tmpWay.MaxSpeedPracticalForward = overrideInMS
+				}
+				if tmpWay.MaxSpeedPracticalBackward > 0 {
+					tmpWay.MaxSpeedPracticalBackward = overrideInMS
+				}
+
+				// Apply override to directional speeds if they exist
+				if tmpWay.MaxSpeedForward > 0 {
+					tmpWay.MaxSpeedForward = overrideInMS
+				}
+				if tmpWay.MaxSpeedBackward > 0 {
+					tmpWay.MaxSpeedBackward = overrideInMS
+				}
 			}
 
 			minLat := float64(90)
