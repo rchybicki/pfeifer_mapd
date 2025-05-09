@@ -17,11 +17,11 @@ struct Way {
   advisorySpeed @10 :Float64;
   hazard @11 :Text;
   oneWay @12 :Bool;
-  maxSpeedPractical @13 :Float64;
-  maxSpeedPracticalForward @14 :Float64;
-  maxSpeedPracticalBackward @15 :Float64;
-  maxSpeedForward @16 :Float64;
-  maxSpeedBackward @17 :Float64;
+  maxSpeedForward @13 :Float64;
+  maxSpeedBackward @14 :Float64;
+  maxSpeedPractical @15 :Float64;
+  maxSpeedPracticalForward @16 :Float64;
+  maxSpeedPracticalBackward @17 :Float64;
 }
 
 struct Coordinates {
