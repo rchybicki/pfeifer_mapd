@@ -66,5 +66,8 @@ earthly +build
 cd scripts
 ./upload_mapd_comma.sh
 
-To update maps:
-generate_and_update_Poland.sh
+To download new maps and push:
+./download_generate_and_update_Poland.sh
+
+To push maps:
+./generate_and_update_Poland.sh
