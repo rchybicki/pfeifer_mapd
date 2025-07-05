@@ -62,12 +62,10 @@ earthly +build
 
 ### RCH NOTES:
 To update the OpenPilot binary, run:
-earthly +build
-cd scripts
-./upload_mapd_comma.sh
+earthly +build && cd scripts && ./upload_mapd_comma.sh && cd ..
 
 To download new maps and push:
-./download_generate_and_update_Poland.sh
+cd scripts && ./download_generate_and_update_Poland.sh && cd ..
 
 To push maps:
-./generate_and_update_Poland.sh
+cd scripts && ./generate_and_update_Poland.sh && cd ..
