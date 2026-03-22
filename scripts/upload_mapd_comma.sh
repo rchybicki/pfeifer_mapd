@@ -1,11 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HOST="${MAPD_SSH_HOST:-commawifi}"
-REMOTE_PATH="${MAPD_REMOTE_PATH:-/data/openpilot/frogpilot/navigation/mapd}"
-
-ssh "$HOST" "mkdir -p \"$(dirname "$REMOTE_PATH")\""
-rsync "$SCRIPT_DIR/mapd-comma" "$HOST:$REMOTE_PATH"
-ssh "$HOST" "chmod +x \"$REMOTE_PATH\""
-echo "mapd-comma uploaded to $HOST:$REMOTE_PATH"
+echo "upload_mapd_comma.sh is deprecated."
+echo "FrogPilot now ships the bundled mapd binary in-repo."
+echo "Update offline tiles with ./upload_small_offline_comma.sh instead."
+exit 1

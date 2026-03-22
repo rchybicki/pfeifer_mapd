@@ -6,6 +6,10 @@ Mapd is a component for use in forks of comma.ai's
 [openpilot](https://github.com/commaai/openpilot). It uses openstreetmap data to
 provide speed limit and curve speed adjustments to the openpilot fork.
 
+For the current FrogPilot testing integration, this repo is used to generate and
+upload offline map data. FrogPilot ships its own bundled `mapd` binary, so the
+device update flow here should only replace `/data/media/0/osm/offline`.
+
 ## openpilot fork integration
 openpilot fork integration is described in
 [docs/integration.md](./docs/integration.md).
