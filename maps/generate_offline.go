@@ -147,6 +147,7 @@ func GenerateOffline(s OfflineSettings) {
 				Lanes:            uint8(lanes),
 				OneWay:           tags["oneway"] == "yes",
 			}
+			applyMaxSpeedOverride(int64(way.ID), &tmpWay)
 			index++
 
 			minLat := float64(90)
@@ -199,7 +200,7 @@ func GenerateOffline(s OfflineSettings) {
 			continue
 		}
 
-		arena := capnp.MultiSegment([][]byte{})
+		arena := capnp.SingleSegment(nil)
 		msg, seg, err := capnp.NewMessage(arena)
 		if err != nil {
 			slog.Error("could not create capnp arena for offline data", "error", err)
