@@ -56,8 +56,11 @@ osmium extract --bbox "$EXTRACT_BBOX" "$BASE_SOURCE" -o "$WORK_DIR/base-box.osm.
 echo "extracting Slovenia source data"
 osmium extract --bbox "$EXTRACT_BBOX" "$SLOVENIA_SOURCE" -o "$WORK_DIR/slovenia-box.osm.pbf" --overwrite
 
+# Extracts of different dates can hold different versions of one OSM object.
+# Keep only the newest.
 echo "merging existing data with Slovenia"
-osmium merge "$WORK_DIR/base-box.osm.pbf" "$WORK_DIR/slovenia-box.osm.pbf" -o "$WORK_DIR/combined-box.osm.pbf" --overwrite
+osmium merge "$WORK_DIR/base-box.osm.pbf" "$WORK_DIR/slovenia-box.osm.pbf" -f pbf -o - |
+  osmium time-filter -F pbf - -o "$WORK_DIR/combined-box.osm.pbf" --overwrite
 
 echo "filtering routable roads"
 osmium tags-filter "$WORK_DIR/combined-box.osm.pbf" "$HIGHWAY_FILTER" -o "$WORK_DIR/filtered.osm.pbf" --overwrite

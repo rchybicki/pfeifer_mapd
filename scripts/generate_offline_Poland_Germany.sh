@@ -40,8 +40,11 @@ fi
 
 ./build_mapd.sh
 
+# Extracts of different dates can hold different versions of one OSM object.
+# Keep only the newest.
 echo "merging $POLAND_SOURCE + $GERMANY_SOURCE -> $MERGED_SOURCE"
-osmium merge "$POLAND_SOURCE" "$GERMANY_SOURCE" -o "$MERGED_SOURCE" --overwrite
+osmium merge "$POLAND_SOURCE" "$GERMANY_SOURCE" -f pbf -o - |
+  osmium time-filter -F pbf - -o "$MERGED_SOURCE" --overwrite
 
 ./filter_Europe.sh "$MERGED_SOURCE"
 rm -rf "$OUTPUT_DIR"
