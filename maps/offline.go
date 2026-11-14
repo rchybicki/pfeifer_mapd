@@ -11,6 +11,12 @@ import (
 	"capnproto.org/go/capnp/v3"
 )
 
+// Tiles from the v2.0.6 based fork hold the practical speeds at ordinals
+// 14 to 16, where the way id, the highway class and a conditional limit
+// now live. Read as the current schema they give wrong limits and way id 0.
+// No upstream schema has this record size.
+var legacyPracticalWaySize = capnp.ObjectSize{DataSize: 96, PointerCount: 4}
+
 func ReadOffline(data []uint8) Offline {
 	msg, err := capnp.UnmarshalPacked(data)
 	if err != nil {
@@ -31,6 +37,10 @@ func ReadOffline(data []uint8) Offline {
 		ways, err := offlineMaps.Ways()
 		if err != nil {
 			slog.Warn("Could not read ways from offline maps", "error", err)
+		}
+		if ways.Len() > 0 && capnp.Struct(ways.At(0)).Size() == legacyPracticalWaySize {
+			slog.Warn("offline maps use the old practical speed layout, regenerate them")
+			return Offline{Loaded: false}
 		}
 		o := Offline{offline: offlineMaps, waysRaw: ways, Loaded: true}
 		o.Ways.Init(o._wayAt, ways.Len())
