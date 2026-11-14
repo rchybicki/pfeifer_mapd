@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 
 	"capnproto.org/go/capnp/v3"
+	"capnproto.org/go/capnp/v3/encoding/text"
+	"capnproto.org/go/capnp/v3/schemas"
 	"pfeifer.dev/mapd/cereal/offline"
 )
 
@@ -34,7 +36,11 @@ func waysBySignature(path string) (map[string]int, int, error) {
 
 	signatures := make(map[string]int, ways.Len())
 	for i := range ways.Len() {
-		signatures[ways.At(i).String()]++
+		signature, err := text.Marshal(offline.Way_TypeID, capnp.Struct(ways.At(i)))
+		if err != nil {
+			return nil, 0, err
+		}
+		signatures[signature]++
 	}
 	return signatures, ways.Len(), nil
 }
@@ -44,6 +50,8 @@ func main() {
 		fmt.Fprintln(os.Stderr, "usage: go run verify_offline_superset.go OLD_DIR NEW_DIR")
 		os.Exit(2)
 	}
+
+	offline.RegisterSchema(schemas.DefaultRegistry)
 
 	oldDir := os.Args[1]
 	newDir := os.Args[2]
