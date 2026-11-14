@@ -53,7 +53,9 @@ require_deletable_dir() {
     */../*) ;;
     *)
       if at_or_under "$parent" "$scripts"; then
-        if [[ "$target" == "$entry" ]] || { (( ! link )) && [[ "$target" -ef "$entry" ]]; }; then
+        # A link is the tile set's own entry when it is that same link, whatever its spelling.
+        if [[ "$target" == "$entry" ]] || { (( ! link )) && [[ "$target" -ef "$entry" ]]; } ||
+          { (( link )) && [[ -L "$entry" && "$(stat -f %d:%i -- "$value")" == "$(stat -f %d:%i -- "$entry")" ]]; }; then
           [[ "${3:-}" == full ]] && return 0
         elif (( link )); then
           at_or_under "$parent" "$tiles" || return 0
