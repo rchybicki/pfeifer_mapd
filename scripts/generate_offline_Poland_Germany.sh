@@ -10,12 +10,8 @@ MERGED_SOURCE="${MAPD_MERGED_SOURCE:-poland-germany-latest.osm.pbf}"
 OUTPUT_DIR="${MAPD_OUTPUT_DIR:-offline}"
 UPLOAD="${MAPD_UPLOAD:-0}"
 
-case "$OUTPUT_DIR" in
-  "" | "." | "/" | /* | ".." | ../* | */.. | */../*)
-    echo "refusing unsafe MAPD_OUTPUT_DIR: $OUTPUT_DIR" >&2
-    exit 1
-    ;;
-esac
+source "$SCRIPT_DIR/require_deletable_dir.sh"
+require_deletable_dir MAPD_OUTPUT_DIR "$OUTPUT_DIR" full
 
 MIN_LON=5
 MIN_LAT=47

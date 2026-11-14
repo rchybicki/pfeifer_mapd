@@ -36,19 +36,9 @@ if ! command -v osmium >/dev/null 2>&1; then
   exit 1
 fi
 
-case "$OUTPUT_DIR" in
-  "" | "." | "/" | "offline" | /* | ".." | ../* | */.. | */../*)
-    echo "refusing unsafe MAPD_OUTPUT_DIR: $OUTPUT_DIR" >&2
-    exit 1
-    ;;
-esac
-
-case "$WORK_DIR" in
-  "" | "." | "/" | /* | ".." | ../* | */.. | */../*)
-    echo "refusing unsafe MAPD_WORK_DIR: $WORK_DIR" >&2
-    exit 1
-    ;;
-esac
+source "$SCRIPT_DIR/require_deletable_dir.sh"
+require_deletable_dir MAPD_OUTPUT_DIR "$OUTPUT_DIR"
+require_deletable_dir MAPD_WORK_DIR "$WORK_DIR"
 
 ./build_mapd.sh
 
