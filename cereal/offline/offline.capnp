@@ -43,6 +43,9 @@ struct Way {
   maxSpeedConditional @16 :Text;
   maxSpeedForwardConditional @17 :Text;
   maxSpeedBackwardConditional @18 :Text;
+  maxSpeedPractical @19 :Float64;
+  maxSpeedPracticalForward @20 :Float64;
+  maxSpeedPracticalBackward @21 :Float64;
 }
 
 struct Coordinates {

@@ -44,6 +44,10 @@ type TmpWay struct {
 	MaxSpeedConditional         string
 	MaxSpeedForwardConditional  string
 	MaxSpeedBackwardConditional string
+
+	MaxSpeedPractical         float64
+	MaxSpeedPracticalForward  float64
+	MaxSpeedPracticalBackward float64
 }
 
 type Area struct {
@@ -173,6 +177,10 @@ func GenerateOffline(s OfflineSettings) {
 				MaxSpeedConditional:         tags["maxspeed:conditional"],
 				MaxSpeedForwardConditional:  tags["maxspeed:forward:conditional"],
 				MaxSpeedBackwardConditional: tags["maxspeed:backward:conditional"],
+
+				MaxSpeedPractical:         ParseMaxSpeed(tags["maxspeed:practical"]),
+				MaxSpeedPracticalForward:  ParseMaxSpeed(tags["maxspeed:practical:forward"]),
+				MaxSpeedPracticalBackward: ParseMaxSpeed(tags["maxspeed:practical:backward"]),
 			}
 			index++
 
@@ -204,6 +212,7 @@ func GenerateOffline(s OfflineSettings) {
 				slices.Reverse(tmpWay.Nodes)
 				tmpWay.MaxSpeedForward, tmpWay.MaxSpeedBackward = tmpWay.MaxSpeedBackward, tmpWay.MaxSpeedForward
 				tmpWay.MaxSpeedForwardConditional, tmpWay.MaxSpeedBackwardConditional = tmpWay.MaxSpeedBackwardConditional, tmpWay.MaxSpeedForwardConditional
+				tmpWay.MaxSpeedPracticalForward, tmpWay.MaxSpeedPracticalBackward = tmpWay.MaxSpeedPracticalBackward, tmpWay.MaxSpeedPracticalForward
 			case "":
 				tmpWay.OneWay = tags["junction"] == "roundabout" || tags["highway"] == "motorway"
 			}
@@ -326,6 +335,9 @@ func GenerateOffline(s OfflineSettings) {
 				slog.Error("could not set way backward conditional max speed", "error", err)
 				panic("unexpected capnp error, exiting")
 			}
+			w.SetMaxSpeedPractical(way.MaxSpeedPractical)
+			w.SetMaxSpeedPracticalForward(way.MaxSpeedPracticalForward)
+			w.SetMaxSpeedPracticalBackward(way.MaxSpeedPracticalBackward)
 			w.SetAdvisorySpeed(way.MaxSpeedAdvisory)
 			w.SetLanes(way.Lanes)
 			w.SetOneWay(way.OneWay)

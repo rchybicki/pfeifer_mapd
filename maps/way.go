@@ -122,6 +122,10 @@ type Way struct {
 	maxSpeedForward  u.Curry[float64]
 	maxSpeedBackward u.Curry[float64]
 
+	maxSpeedPractical         u.Curry[float64]
+	maxSpeedPracticalForward  u.Curry[float64]
+	maxSpeedPracticalBackward u.Curry[float64]
+
 	maxSpeedConditional           u.Curry[string]
 	maxSpeedForwardConditional    u.Curry[string]
 	maxSpeedBackwardConditional   u.Curry[string]
@@ -238,14 +242,41 @@ func (w *Way) MaxSpeedBackward() float64 {
 	return w.maxSpeedBackward.Value(w._maxSpeedBackward)
 }
 
+func (w *Way) _maxSpeedPractical() float64 {
+	return w.Way.MaxSpeedPractical()
+}
+
+func (w *Way) MaxSpeedPractical() float64 {
+	return w.maxSpeedPractical.Value(w._maxSpeedPractical)
+}
+
+func (w *Way) _maxSpeedPracticalForward() float64 {
+	return w.Way.MaxSpeedPracticalForward()
+}
+
+func (w *Way) MaxSpeedPracticalForward() float64 {
+	return w.maxSpeedPracticalForward.Value(w._maxSpeedPracticalForward)
+}
+
+func (w *Way) _maxSpeedPracticalBackward() float64 {
+	return w.Way.MaxSpeedPracticalBackward()
+}
+
+func (w *Way) MaxSpeedPracticalBackward() float64 {
+	return w.maxSpeedPracticalBackward.Value(w._maxSpeedPracticalBackward)
+}
+
 func (w *Way) MaxSpeedForDirection(isForward bool) float64 {
-	maxSpeed := w.MaxSpeed()
-	if isForward && w.MaxSpeedForward() > 0 {
-		maxSpeed = w.MaxSpeedForward()
-	} else if !isForward && w.MaxSpeedBackward() > 0 {
-		maxSpeed = w.MaxSpeedBackward()
+	practicalForDirection, maxSpeedForDirection := w.MaxSpeedPracticalBackward(), w.MaxSpeedBackward()
+	if isForward {
+		practicalForDirection, maxSpeedForDirection = w.MaxSpeedPracticalForward(), w.MaxSpeedForward()
 	}
-	return maxSpeed
+	for _, speed := range []float64{practicalForDirection, maxSpeedForDirection, w.MaxSpeedPractical()} {
+		if speed > 0 {
+			return speed
+		}
+	}
+	return w.MaxSpeed()
 }
 
 func (w *Way) _maxSpeedConditional() string {
