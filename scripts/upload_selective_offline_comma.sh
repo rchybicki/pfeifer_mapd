@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE="${MAPD_OFFLINE_SOURCE:-$SCRIPT_DIR/offline-slovenia}"
 HOST="${MAPD_SSH_HOST:-comma}"
-REMOTE_PATH="${MAPD_OFFLINE_REMOTE_PATH:-/data/media/0/osm/offline/}"
+REMOTE_PATH="${MAPD_OFFLINE_REMOTE_PATH:-/data/media/0/osm-v240/offline/}"
 
 if [[ ! -d "$SOURCE" ]]; then
   echo "missing selective offline map directory: $SOURCE" >&2

@@ -16,13 +16,19 @@ var (
 	BasePath   string = GetBasePath()
 )
 
+// deviceMapsPath holds this fork's tiles, downloads and work files on the
+// device. Upstream mapd and the v2.0.6 based fork use /data/media/0/osm with
+// another offline Way layout; a directory of its own means no binary ever
+// reads the other one's tiles, on an update or on a rollback.
+const deviceMapsPath = "/data/media/0/osm-v240"
+
 func GetBaseOpPath() string {
 	exists, err := Exists("/data/media/0")
 	if err != nil {
 		slog.Warn("could not check if /data/media/0 exists", "error", err)
 	}
 	if exists {
-		return "/data/media/0/osm"
+		return deviceMapsPath
 	} else {
 		return "."
 	}
@@ -52,7 +58,7 @@ func GetBasePath() string {
 		slog.Warn("could not check if /data/media/0 exists", "error", err)
 	}
 	if exists {
-		return "/data/media/0/osm"
+		return deviceMapsPath
 	} else {
 		return "media/"
 	}
