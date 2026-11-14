@@ -11,8 +11,8 @@ if [[ ! -d "$SOURCE" ]]; then
   exit 1
 fi
 
-# rsync --delete from an empty source would remove every tile on the device.
-tile_count="$(find "$SOURCE" -type f | wc -l | tr -d ' ')"
+# rsync --delete from a source with nothing to send would remove every tile on the device.
+tile_count="$(find "$SOURCE/" -type f ! -name '*.tar.gz' ! -name '.*' | wc -l | tr -d ' ')"
 if [[ "$tile_count" == "0" ]]; then
   echo "refusing to upload an empty map directory: $SOURCE" >&2
   exit 1
