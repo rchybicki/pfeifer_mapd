@@ -10,6 +10,13 @@ MERGED_SOURCE="${MAPD_MERGED_SOURCE:-poland-germany-latest.osm.pbf}"
 OUTPUT_DIR="${MAPD_OUTPUT_DIR:-offline}"
 UPLOAD="${MAPD_UPLOAD:-0}"
 
+case "$OUTPUT_DIR" in
+  "" | "." | "/" | /* | ".." | ../* | */.. | */../*)
+    echo "refusing unsafe MAPD_OUTPUT_DIR: $OUTPUT_DIR" >&2
+    exit 1
+    ;;
+esac
+
 MIN_LON=5
 MIN_LAT=47
 MAX_LON=25
@@ -59,7 +66,7 @@ do
 done
 
 if [[ "$UPLOAD" == "1" ]]; then
-  ./upload_small_offline_comma.sh
+  MAPD_OFFLINE_SOURCE="$OUTPUT_DIR" ./upload_small_offline_comma.sh
 else
   echo "offline maps generated in $SCRIPT_DIR/$OUTPUT_DIR"
   echo "not uploaded; set MAPD_UPLOAD=1 to push the generated tiles to the device"
