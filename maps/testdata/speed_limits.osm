@@ -12,6 +12,8 @@
   <node id="10" version="1" lat="51.1400" lon="17.0600"/>
   <node id="11" version="1" lat="51.1500" lon="17.0500"/>
   <node id="12" version="1" lat="51.1500" lon="17.0600"/>
+  <node id="13" version="1" lat="51.1600" lon="17.0500"/>
+  <node id="14" version="1" lat="51.1600" lon="17.0600"/>
   <way id="1001" version="1">
     <nd ref="1"/>
     <nd ref="2"/>
@@ -56,6 +58,14 @@
     <tag k="highway" v="residential"/>
     <tag k="maxspeed" v="50"/>
     <tag k="maxspeed:practical" v="40"/>
+    <tag k="maxspeed:conditional" v="30 @ (Mo-Su)"/>
+  </way>
+  <way id="1167942324" version="1">
+    <nd ref="13"/>
+    <nd ref="14"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="maxspeed" v="70"/>
+    <tag k="maxspeed:forward" v="70"/>
     <tag k="maxspeed:conditional" v="30 @ (Mo-Su)"/>
   </way>
 </osm>

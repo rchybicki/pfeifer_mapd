@@ -182,6 +182,7 @@ func GenerateOffline(s OfflineSettings) {
 				MaxSpeedPracticalForward:  ParseMaxSpeed(tags["maxspeed:practical:forward"]),
 				MaxSpeedPracticalBackward: ParseMaxSpeed(tags["maxspeed:practical:backward"]),
 			}
+			applyMaxSpeedOverride(tmpWay.Id, &tmpWay)
 			index++
 
 			minLat := float64(90)
