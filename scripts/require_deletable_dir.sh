@@ -36,7 +36,7 @@ at_or_under() {
 # directory and clear of the full host tile set, scripts/offline. A full
 # generator passes "full" to replace that set as a whole.
 require_deletable_dir() {
-  local name="$1" value="$2" scripts entry tiles target parent link=0
+  local name="$1" value="$2" scripts entry tiles target parent id link=0
   scripts="$(physical_path "$(dirname -- "${BASH_SOURCE[0]}")")"
   entry="$scripts/offline"
   tiles="$(physical_path "$entry")"
@@ -55,7 +55,8 @@ require_deletable_dir() {
       if at_or_under "$parent" "$scripts"; then
         # A link is the tile set's own entry when it is that same link, whatever its spelling.
         if [[ "$target" == "$entry" ]] || { (( ! link )) && [[ "$target" -ef "$entry" ]]; } ||
-          { (( link )) && [[ -L "$entry" && "$(stat -f %d:%i -- "$value")" == "$(stat -f %d:%i -- "$entry")" ]]; }; then
+          { (( link )) && [[ -L "$entry" ]] && id="$(/usr/bin/stat -f %d:%i -- "$value")" &&
+            [[ -n "$id" && "$id" == "$(/usr/bin/stat -f %d:%i -- "$entry")" ]]; }; then
           [[ "${3:-}" == full ]] && return 0
         elif (( link )); then
           at_or_under "$parent" "$tiles" || return 0
