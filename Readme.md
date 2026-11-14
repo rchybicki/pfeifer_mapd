@@ -6,6 +6,19 @@ Mapd is a component for use in forks of comma.ai's
 [openpilot](https://github.com/commaai/openpilot). It uses openstreetmap data to
 provide speed limit and curve speed adjustments to the openpilot fork.
 
+For the current FrogPilot testing integration, this repo is used to build the
+local `mapd` generator, generate offline map data, and upload offline tiles.
+The runtime `mapd` binary that FrogPilot launches is tracked in the sibling
+`openpilot-rch` repo at `frogpilot/navigation/mapd`, so runtime binary updates
+should be made and deployed from that repo instead of pushing a binary directly
+from here.
+
+## Route Speed Overrides
+Route speed overrides are defined in [maps/speed_overrides.go](./maps/speed_overrides.go)
+and are applied when offline map tiles are generated. Editing those values does
+not change runtime behavior until the offline tiles are regenerated from the
+same OSM PBF extract.
+
 ## openpilot fork integration
 openpilot fork integration is described in
 [docs/integration.md](./docs/integration.md).

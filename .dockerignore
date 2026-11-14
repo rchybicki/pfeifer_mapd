@@ -4,6 +4,8 @@ mapd
 /offline
 scripts/offline
 scripts/mapd
+scripts/mapd-comma
+scripts/*.osm.pbf
 tmp
 filtered.osm.pbf
 planet-latest.osm.pbf

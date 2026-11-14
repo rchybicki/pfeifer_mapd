@@ -4,8 +4,12 @@ mapd
 /offline
 scripts/offline
 scripts/mapd
+scripts/mapd-comma
 tmp
 filtered.osm.pbf
+europe.osm.pbf
+poland-latest.osm.pbf
+dolnoslaskie-latest.osm.pbf
 planet-latest.osm.pbf
 box.osm.pbf
 map.osm.pbf
