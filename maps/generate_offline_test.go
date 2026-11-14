@@ -64,6 +64,7 @@ func TestGeneratedWaySpeedLimits(t *testing.T) {
 		{"applying conditional speed beats practical speed", 1006, true, 30, 30},
 		{"override replaces posted speeds", 1167942324, false, 45, 45},
 		{"override beats a conditional speed", 1167942324, true, 45, 45},
+		{"directional override for way 1167942322", 1167942322, false, 60, 40},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			setConditionalSpeedLimitControl(t, tc.conditionalControl)

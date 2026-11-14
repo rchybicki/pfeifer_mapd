@@ -53,9 +53,9 @@ var maxSpeedOverrides = map[int64]float64{
 	1167942321: 25,
 	1169295578: 40,
 	511534356:  40,
-	941773890:  55,
+	941773890:  65,
 	1169297710: 55,
-	253022529:  55,
+	253022529:  65,
 	185988024:  70,
 	448924246:  70,
 	977768095:  70,
@@ -484,5 +484,12 @@ func applyMaxSpeedOverride(wayID int64, way *TmpWay) {
 	}
 	if way.MaxSpeedPracticalBackward > 0 {
 		way.MaxSpeedPracticalBackward = override
+	}
+
+	if wayID == 1167942322 {
+		way.MaxSpeedForward = 60 * ms.KPH_TO_MS
+		way.MaxSpeedPracticalForward = way.MaxSpeedForward
+		way.MaxSpeedBackward = 40 * ms.KPH_TO_MS
+		way.MaxSpeedPracticalBackward = way.MaxSpeedBackward
 	}
 }

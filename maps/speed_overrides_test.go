@@ -65,6 +65,25 @@ func TestApplyMaxSpeedOverrideDoesNotCreateDirectionalSpeeds(t *testing.T) {
 	}
 }
 
+func TestApplyMaxSpeedOverride1167942322(t *testing.T) {
+	for _, initial := range []float64{0, 20} {
+		way := TmpWay{
+			MaxSpeedForward: initial, MaxSpeedBackward: initial,
+			MaxSpeedPracticalForward: initial, MaxSpeedPracticalBackward: initial,
+		}
+		applyMaxSpeedOverride(1167942322, &way)
+		if way.MaxSpeedForward != 60*ms.KPH_TO_MS || way.MaxSpeedPracticalForward != 60*ms.KPH_TO_MS {
+			t.Fatalf("expected 60 kph forward, got %+v", way)
+		}
+		if way.MaxSpeedBackward != 40*ms.KPH_TO_MS || way.MaxSpeedPracticalBackward != 40*ms.KPH_TO_MS {
+			t.Fatalf("expected 40 kph backward, got %+v", way)
+		}
+		if way.MaxSpeed != 45*ms.KPH_TO_MS || way.MaxSpeedPractical != 45*ms.KPH_TO_MS {
+			t.Fatalf("expected 45 kph fallback, got %+v", way)
+		}
+	}
+}
+
 func TestApplyMaxSpeedOverrideNoopWithoutMatch(t *testing.T) {
 	way := TmpWay{
 		MaxSpeed:         1,

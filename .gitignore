@@ -7,6 +7,14 @@ scripts/mapd
 scripts/mapd-comma
 tmp
 filtered.osm.pbf
+*-latest.osm.pbf
+*.osm.pbf.download
+*.osm.pbf.download.aria2
+*.osm.pbf.pre-update
+scripts/offline-poland-update/
+scripts/offline-slovenia/
+scripts/poland-update-work/
+scripts/slovenia-work/
 europe.osm.pbf
 poland-latest.osm.pbf
 dolnoslaskie-latest.osm.pbf
